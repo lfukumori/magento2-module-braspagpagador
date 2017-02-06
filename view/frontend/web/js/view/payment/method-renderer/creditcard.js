@@ -39,7 +39,8 @@ define(
                 creditCardInstallments: '',
                 creditCardsavecard: 0,
                 creditCardExpDate: '',
-                creditCardSoptPaymentToken: ''
+                creditCardSoptPaymentToken: '',
+                creditCardFieldIsPasted: false
             },
 
             validateForm: function (form) {
@@ -58,7 +59,8 @@ define(
                         'creditCardVerificationNumber',
                         'creditCardInstallments',
                         'creditCardsavecard',
-                        'creditCardSoptPaymentToken'
+                        'creditCardSoptPaymentToken',
+                        'creditCardFieldIsPasted'
                     ]);
 
                 return this;
@@ -85,7 +87,8 @@ define(
                         'cc_owner': this.creditCardOwner(),
                         'cc_installments': this.creditCardInstallments(),
                         'cc_savecard': this.creditCardsavecard() ? 1 : 0,
-                        'cc_soptpaymenttoken': this.creditCardSoptPaymentToken()
+                        'cc_soptpaymenttoken': this.creditCardSoptPaymentToken(),
+                        'cc_number_is_pasted': this.creditCardFieldIsPasted()
                     }
                 };
 
@@ -97,12 +100,18 @@ define(
                             'cc_type': this.creditCardType(),
                             'cc_installments': this.creditCardInstallments(),
                             'cc_savecard': this.creditCardsavecard() ? 1 : 0,
-                            'cc_soptpaymenttoken': this.creditCardSoptPaymentToken()
+                            'cc_soptpaymenttoken': this.creditCardSoptPaymentToken(),
+                            'cc_number_is_pasted': this.creditCardFieldIsPasted()
                         }
                     };
                 }
 
                 return data;
+            },
+
+            creditCardNumberIsPasted: function () {
+                this.creditCardFieldIsPasted(true);
+                return true;
             },
 
             isInstallmentsActive: function () {
@@ -198,18 +207,18 @@ define(
                                 self.isPlaceOrderActionAllowed(true);
                             }
                         ).done(
-                            function (orderId) {
-                                self.afterPlaceOrder();
+                        function (orderId) {
+                            self.afterPlaceOrder();
 
-                                if (self.isAuthenticated()) {
-                                    return RedirectAfterPlaceOrder(orderId);
-                                }
-
-                                if (self.redirectAfterPlaceOrder) {
-                                    redirectOnSuccessAction.execute();
-                                }
+                            if (self.isAuthenticated()) {
+                                return RedirectAfterPlaceOrder(orderId);
                             }
-                        );
+
+                            if (self.redirectAfterPlaceOrder) {
+                                redirectOnSuccessAction.execute();
+                            }
+                        }
+                    );
 
                     return true;
                 }
